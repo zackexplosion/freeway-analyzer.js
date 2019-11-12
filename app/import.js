@@ -34,6 +34,7 @@ require('./common')(async (err, Models) => {
 
       try {
         if (fs.existsSync(file_path)) {
+          log('----')
           log('reading', file_path)
           rows = await parseCSV(file_path)
           await Models.M06A.insertMany(rows)
