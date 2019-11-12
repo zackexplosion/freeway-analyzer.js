@@ -3,7 +3,7 @@ services:
   db:
     image: "mongo:3-stretch"
     volumes:
-      - ./db:/data/db
+      - ${DB_PATH}:/data/db
     ports:
       - 27017:27017
   app:

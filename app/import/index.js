@@ -16,15 +16,15 @@ const workerThread = require('./worker')
 
 
 function mainThread() {
-  const worker_count = parseInt(8 || process.env.THREADS)
+  const worker_count = parseInt(14 || process.env.THREADS)
   var BASE_PATH = process.argv[2]
   if (!BASE_PATH) {
     throw '找不到目標資料夾'
   }
-  const startDate = moment(process.argv[3] || '2015-01-01 00:00:00')
-  const endDate = moment(process.argv[4] || '2016-01-01 00:00:00')
-  var duration = moment.duration(endDate.diff(startDate));
-  var peroid_length = (duration.asHours() + 1) / worker_count
+  const startDate = process.argv[3] || '2015-01-01 00:00:00'
+  const endDate = process.argv[4] || '2016-01-01 00:00:00'
+  var duration = moment.duration(moment(endDate).diff(startDate))
+  var peroid_length = parseInt((duration.asHours() + 1) / worker_count)
 
   console.log('startDate', startDate, 'endDate', endDate)
   console.log('peroid_length', peroid_length)

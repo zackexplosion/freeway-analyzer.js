@@ -49,10 +49,10 @@ module.exports = function workerThread() {
 
         try {
           if (fs.existsSync(file_path)) {
-            // log('reading', file_path)
+            // log(`#${threadId} reading ${file_path}`)
             let { rows, rowCount } = await parseCSV(file_path)
-            // log(`Parsed ${rowCount} rows, writing to db`)
-            // await Models.M06A.insertMany(rows)
+            // log(`#${threadId} Parsed ${rowCount} rows, writing to db`)
+            await Models.M06A.insertMany(rows)
           } else {
             log('path', file_path, 'not exist')
           }
