@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "cli-progress": "^3.3.1",
     "fast-csv": "^3.4.0",
     "moment": "^2.24.0",
     "mongoose": "^5.7.10"
@@ -11,8 +12,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "import": "DB_HOST=127.0.0.1 DB_PORT=27017 node --max-old-space-size=3096 ./app/import.js",
-    "import:v2": "DB_HOST=127.0.0.1 DB_PORT=27017 node --max-old-space-size=3096 --experimental-worker ./app/import_worker.js"
+    "import": "DB_HOST=127.0.0.1 DB_PORT=27017 node --max-old-space-size=3096 --experimental-worker ./app/import/index.js"
   },
   "author": "",
   "license": "ISC"
