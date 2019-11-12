@@ -10,7 +10,7 @@ const M06A = mongoose.model('M06A', {
   enterGentry: { type: String, index: true},
   exitTime: { type: Date, index: true},
   exitGentry: { type: String, index: true},
-  tripLength: Number,
+  tripLength: { type: Number, index: true},
   tripDetails: [String]
 })
 
