@@ -60,7 +60,7 @@ require('./common')(async (err, Models) => {
     table.push([
       startDateTime.trim(),
       duration,
-      startGentry.section.trim(),
+      currentGentry_id + ' + ' + startGentry.section.trim(),
       `${speed} KM/h`
     ])
     // table.push([startDateTime.trim(), startGentry.section, 'wryy'])
@@ -72,7 +72,12 @@ require('./common')(async (err, Models) => {
   console.log('總里程:', row['tripLength'], 'KM')
   let duration = moment.duration(new Date(accessTimes[accessTimes.length-1]) - new Date (accessTimes[0]))
   duration = humanizeDuration(duration.asSeconds() * 1000)
+  let direction = {
+    'N': '北上',
+    'S': '南下'
+  }
   console.log('總時間:', duration )
+  console.log('方向:', direction[row[]] )
   // console.log(':', duration)
   // console.log('平均速度:', speeds.reduce((a, b) => a+b ) + ' km/h')
 
