@@ -30,7 +30,8 @@ require('./common')(async (err, Models) => {
   try {
     row = await Models.M06A.findOne(ObjectId(process.argv[2]))
   } catch (error) {
-
+    console.log('record not found')
+    process.exit()
   }
 
   let speeds = []

@@ -12,14 +12,18 @@
 可以用 https://direnv.net/ 設定 `DB_PATH` 環境變數，或是直接在cli指定，例如
 `DB_PATH=/var/url/db docker-compose up db`
 
-## 從已下載的資料夾匯入| startDate   | 2017-07-07 00:00:00  | 2015-01-01 00:00:00     |
-`npm run import DATE_PATH [startDateTime] [endDateTime]`
+## 從已下載的資料夾匯入
+
+`[THREADS=2] npm run import DATE_PATH [startDateTime] [endDateTime]`
+
+可以用環境變數設定執行緒
 
 | Param       | Example              | Default  |
 | ------      | -------------------  | ------------ |
+| THREADS     | THREADS=4       | THREADS=2 |
 | DATE_PATH   | /var/usr/M06A/       | 無，必填 |
 | startDateTime   | 2017-07-07 00:00:00  | 2015-01-01 00:00:00     |
-| endDateTime    | 2017-07-07 00:00:00  | 2016-01-01 00:00:00     |
+| endDateTime    | 2017-07-07 12:00:00  | 2016-01-01 00:00:00     |
 
 ## 計算單筆資料
 
