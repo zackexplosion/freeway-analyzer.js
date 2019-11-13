@@ -8,10 +8,11 @@
 `npm install`
 
 
-啟動資料庫，可以用 https://direnv.net/ 設定 `DB_PATH` 環境變數
-`DB_PATH=/var/url/db docker-compose up db -d`
+## 啟動資料庫
+可以用 https://direnv.net/ 設定 `DB_PATH` 環境變數，或是直接在cli指定，例如
+`DB_PATH=/var/url/db docker-compose up db`
 
-從已下載的資料夾匯入
+## 從已下載的資料夾匯入
 `npm run import DATE_PATH [startDate]`
 
 | Param       | Example              | Default  |
@@ -19,10 +20,16 @@
 | DATE_PATH   | /var/usr/M06A/       | 無，必填 |
 | startDate   | 2017-07-07 00:00:00  | 2015-01-01 00:00:00     |
 
-計算單筆資料
+## 計算單筆資料
+
 `node app/details.js OBJECT_ID`
 
 | Param       | Example              | Default  |
 | ------      | -------------------  | ------------ |
 | OBJECT_ID   | 5dcb31e3bae71011669b8f6e       | 無，必填 |
+
+# 更新門架資料
+
+目前還沒連網自動抓最新的，只能從本地的etag.xml更新
+`node lib/gentries.js update > lib/_gentries.js`
 

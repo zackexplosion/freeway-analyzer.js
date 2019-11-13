@@ -6,8 +6,8 @@ const humanizeDuration = require('humanize-duration')
 const Table = require('cli-table3')
 // const table = new Table()
 const table = new Table({
-  head: ['EnterTime', 'Duration', 'Section', 'Speed'],
-  colWidths: [25, 25, 50, 30]
+  head: ['Time', 'Section', 'Speed'],
+  colWidths: [25, 50, 30]
 });
 console.log(table.toString());
 function calculateSpeed(d1, d2, length) {
@@ -41,6 +41,23 @@ require('./common')(async (err, Models) => {
     let duration = 0
     let startGentry = gentries(currentGentry_id)
     accessTimes.push(startDateTime)
+    // if ( i == 0 ) {
+    //   table.push([
+    //     startDateTime.trim(),
+    //     duration,
+    //     startGentry.locationMileRaw + ', ' + startGentry.sectionStart,
+    //     '0 KM/h',
+    //   ])
+    // }
+    // else if (i == row['tripDetails'].length-1) {
+    //   table.push([
+    //     startDateTime.trim(),
+    //     duration,
+    //     startGentry.locationMileRaw + ', ' + startGentry.sectionStart,
+    //     '0 KM/h',
+    //   ])
+    // }
+    // else {
     if (i != 0 && i != row['tripDetails'].length-1) {
       // console.log(row['tripDetails'][i+1])
       let [nextDateTime, nextGentry_id] = row['tripDetails'][i+1].split('+')
@@ -49,21 +66,14 @@ require('./common')(async (err, Models) => {
       let result = calculateSpeed(new Date(startDateTime), new Date(nextDateTime), nextGentry.locationMile - startGentry.locationMile)
       speed = result.speed
       duration = result.duration
+      speeds.push(speed)
+      table.push([
+        startDateTime.trim(),
+        startGentry.locationMileRaw + ', ' + startGentry.sectionStart + ' -> ' + startGentry.sectionEnd,
+        // currentGentry_id + ' + ' + startGentry.section.trim(),
+        `${speed} KM/h`
+      ])
     }
-    // console.log(startDateTime.trim(), startGentry.section, `速度 ${speed} KM/h`)
-    // table.push(
-    //   { '進入時間': startDateTime },
-    //   { '門架名稱': startGentry.section },
-    //   { '平均速度': speed}
-    // )
-    speeds.push(speed)
-    table.push([
-      startDateTime.trim(),
-      duration,
-      currentGentry_id + ' + ' + startGentry.section.trim(),
-      `${speed} KM/h`
-    ])
-    // table.push([startDateTime.trim(), startGentry.section, 'wryy'])
   })
 
   // let { speed, duration } = calculateSpeed(row['enterTime'], row['exitTime'], row['tripLength'])
@@ -77,7 +87,7 @@ require('./common')(async (err, Models) => {
     'S': '南下'
   }
   console.log('總時間:', duration )
-  console.log('方向:', direction[row[]] )
+  // console.log('方向:', direction[row])
   // console.log(':', duration)
   // console.log('平均速度:', speeds.reduce((a, b) => a+b ) + ' km/h')
 
