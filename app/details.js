@@ -70,7 +70,6 @@ require('./common')(async (err, Models) => {
       table.push([
         startDateTime.trim(),
         startGentry.locationMileRaw + ', ' + startGentry.sectionStart + ' -> ' + startGentry.sectionEnd,
-        // currentGentry_id + ' + ' + startGentry.section.trim(),
         `${speed} KM/h`
       ])
     }
