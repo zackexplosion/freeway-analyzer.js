@@ -6,8 +6,8 @@ const humanizeDuration = require('humanize-duration')
 const Table = require('cli-table3')
 // const table = new Table()
 const table = new Table({
-  head: ['Time', 'Section', 'Speed'],
-  colWidths: [25, 50, 30]
+  head: ['Time', 'Name', 'Mile', 'Section', 'Speed'],
+  colWidths: [22, 25, 15, 50, 30]
 });
 console.log(table.toString());
 function calculateSpeed(d1, d2, length) {
@@ -21,7 +21,7 @@ function calculateSpeed(d1, d2, length) {
   return  {
     // duration: humanizeDuration(duration.asSeconds()),
     duration: humanizeDuration(duration.asSeconds() * 1000),
-    speed
+    speed: Math.abs(speed)
   }
 }
 
@@ -67,11 +67,15 @@ require('./common')(async (err, Models) => {
       speed = result.speed
       duration = result.duration
       speeds.push(speed)
-      table.push([
+
+      let r = [
         startDateTime.trim(),
-        startGentry.locationMileRaw + ', ' + startGentry.sectionStart + ' -> ' + startGentry.sectionEnd,
+        startGentry.roadName,
+        startGentry.direction + ' ' + startGentry.locationMileRaw,
+        startGentry.sectionStart + ' -> ' + startGentry.sectionEnd,
         `${speed} KM/h`
-      ])
+      ]
+      table.push(r)
     }
   })
 
