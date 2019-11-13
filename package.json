@@ -15,7 +15,8 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "import": "DB_HOST=127.0.0.1 DB_PORT=27017 node --max-old-space-size=3096 --experimental-worker ./app/import/index.js"
+    "import": "DB_HOST=127.0.0.1 DB_PORT=27017 node --max-old-space-size=3096 --experimental-worker ./app/import/index.js",
+    "inspect": "DB_HOST=127.0.0.1 DB_PORT=27017 node  ./app/details.js"
   },
   "author": "",
   "license": "ISC"

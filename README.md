@@ -27,7 +27,7 @@
 
 ## 計算單筆資料
 
-`node app/details.js OBJECT_ID`
+`npm run inspect OBJECT_ID`
 
 | Param       | Example              | Default  |
 | ------      | -------------------  | ------------ |
