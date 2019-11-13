@@ -8,12 +8,11 @@ const Table = require('cli-table3')
 const table = new Table({
   head: ['Time', 'Name', 'Mile', 'Section', 'Speed'],
   colWidths: [22, 25, 15, 50, 30]
-});
-console.log(table.toString());
+})
 function calculateSpeed(d1, d2, length) {
   // let duration = (d2 - d1) / 1000
   let duration = moment.duration(d2 - d1)
-  let speed = (length / duration.asHours()).toFixed(2)
+  let speed = (length / duration.asHours())
   // console.log('d1', d1)
   // console.log('d2', d2)
   // console.log('length', length)
@@ -21,7 +20,7 @@ function calculateSpeed(d1, d2, length) {
   return  {
     // duration: humanizeDuration(duration.asSeconds()),
     duration: humanizeDuration(duration.asSeconds() * 1000),
-    speed: Math.abs(speed)
+    speed: Math.round(Math.abs(speed))
   }
 }
 

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const ObjectId = require('mongoose').Types.ObjectId
 mongoose.set('useCreateIndex', true)
 const DB_HOST = process.env.DB_HOST || 'db'
 const DB_PORT = process.env.DB_PORT || 27017
@@ -14,8 +15,27 @@ const M06A = mongoose.model('M06A', {
   tripDetails: [String]
 })
 
+const M06A_DETAILS = mongoose.model('M06A_DETAILS', {
+  vehicleId: { type: ObjectId, index: true},
+  vehicleType: { type: Number, index: true},
+  startDateTime: { type: Date, index: true},
+  endDateTime: { type: Date, index: true},
+  startGentry: { type: String, index: true},
+  endGentry: { type: String, index: true},
+  tripLength: { type: String, index: true},
+  speed: { type: Number, index: true},
+})
+
+M06A_DETAILS.schema.index({
+  vehicleId: 1,
+  gentry: 1,
+}, {
+  unique: true,
+})
+
 var Models = {
-  M06A
+  M06A,
+  M06A_DETAILS
 }
 
 module.exports = function(cb){
