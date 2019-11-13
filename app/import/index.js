@@ -16,7 +16,7 @@ const workerThread = require('./worker')
 
 
 function mainThread() {
-  const worker_count = parseInt(14 || process.env.THREADS)
+  const worker_count = parseInt(2 || process.env.THREADS)
   var BASE_PATH = process.argv[2]
   if (!BASE_PATH) {
     throw '找不到目標資料夾'

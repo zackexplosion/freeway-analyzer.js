@@ -12,13 +12,14 @@
 可以用 https://direnv.net/ 設定 `DB_PATH` 環境變數，或是直接在cli指定，例如
 `DB_PATH=/var/url/db docker-compose up db`
 
-## 從已下載的資料夾匯入
-`npm run import DATE_PATH [startDate]`
+## 從已下載的資料夾匯入| startDate   | 2017-07-07 00:00:00  | 2015-01-01 00:00:00     |
+`npm run import DATE_PATH [startDateTime] [endDateTime]`
 
 | Param       | Example              | Default  |
 | ------      | -------------------  | ------------ |
 | DATE_PATH   | /var/usr/M06A/       | 無，必填 |
-| startDate   | 2017-07-07 00:00:00  | 2015-01-01 00:00:00     |
+| startDateTime   | 2017-07-07 00:00:00  | 2015-01-01 00:00:00     |
+| endDateTime    | 2017-07-07 00:00:00  | 2016-01-01 00:00:00     |
 
 ## 計算單筆資料
 
