@@ -10,7 +10,7 @@
 
 ## 啟動資料庫
 可以用 https://direnv.net/ 設定 `DB_PATH` 環境變數，或是直接在cli指定，例如
-`DB_PATH=/var/url/db docker-compose up db`
+`DB_PATH=/var/url/db docker-compose up -d`
 
 ## 從已下載的資料夾匯入
 

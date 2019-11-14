@@ -19,7 +19,7 @@ function calculateSpeed(d1, d2, length) {
 const START_DATE = new Date('2015-05-11T23:00:00.000Z')
 const END_DATE = new Date('2015-05-11T22:00:00.000Z')
 
-function handleRow (Models, rows) {
+async function handleRow (Models, rows) {
   rows.forEach(async r => {
     let i = 0
     let details = r['tripDetails']
@@ -94,7 +94,7 @@ require('../common')(async (err, Models) => {
                 .limit(1000)
                 .skip(i * per_page)
 
-      handleRow(Models, rows)
+      await handleRow(Models, rows)
     }
 
 

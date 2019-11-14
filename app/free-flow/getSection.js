@@ -17,6 +17,7 @@ async function main(Models){
     startGentry: startGentryId,
     endGentry: endGentryId
   })
+
   rows.forEach(r => {
     if ( typeof speeds[r.speed] === 'undefined') {
       speeds[r.speed] = 0
