@@ -2,34 +2,37 @@ const Table = require('cli-table3')
 var babar = require('babar')
 const gentries = require('../../lib/gentries')
 
-const startGentryId = '01F3676S' || process.argv[2]
-const endGentryId = '01F3686S' || process.argv[3]
+const startGentryId = process.argv[2] || '01F3676S'
+// const endGentryId = process.argv[3] || '01F3686S'
+const startDateTime = process.argv[3] || '2015-01-01 00'
 const startGentry = gentries(startGentryId)
 const endGentry = gentries(endGentryId)
 
-console.log(`${startGentry.sectionStart} ${startGentry.locationMileRaw} ~ ${endGentry.sectionStart} ${endGentry.locationMileRaw}`)
-
 // table is an Array, so you can `push`, `unshift`, `splice` and friends
-let speeds = {}
 
-async function main(Models){
-  let rows = await Models.M06A_DETAILS.find({
-    startGentry: startGentryId,
-    endGentry: endGentryId
-  })
 
+async function main() {
+  db = await require('../common')()
+  let query = {
+    startGentryId: startGentryId,
+    // endGentry: endGentryId
+  }
+  console.log('querying....', query)
+  let rows = await db.models.Freeflow.find(query)
+  // console.log(rows)
+  let speeds = []
   rows.forEach(r => {
     if ( typeof speeds[r.speed] === 'undefined') {
       speeds[r.speed] = 0
     }
-    // console.log(r.speed)
+    // console.log(r)
     speeds[r.speed] = speeds[r.speed] + 1
   })
   let babarData = []
   Object.keys(speeds).forEach(k => {
     babarData.push([k, speeds[k]])
   })
-
+  console.log(`${startGentry.sectionStart} ${startGentry.locationMileRaw} ~ ${endGentry.sectionStart} ${endGentry.locationMileRaw}`)
   console.log(babar(babarData ,{
     width: 150,
     height: 40
@@ -37,7 +40,4 @@ async function main(Models){
   process.exit(1)
 }
 
-require('../common')((err, Models) => {
-  main(Models)
-  // process.exit()
-})
+main()

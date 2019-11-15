@@ -7,10 +7,13 @@
     "babar": "^0.2.0",
     "cli-progress": "^3.3.1",
     "cli-table3": "^0.5.1",
+    "download-file-with-progressbar": "^1.2.3",
     "fast-csv": "^3.4.0",
     "humanize-duration": "^3.21.0",
     "moment": "^2.24.0",
     "mongoose": "^5.7.10",
+    "sprintf-js": "^1.1.2",
+    "targz": "^1.0.1",
     "xml2js": "^0.4.22"
   },
   "devDependencies": {},
