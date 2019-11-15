@@ -7,7 +7,7 @@ const os = require('os')
 const fs = require('fs')
 const path = require('path')
 const startDateTime = process.argv[2] || '2015-01-01 00'
-// const endDateTime = process.argv[3] || '2015-01-01 00'
+const endDateTime = process.argv[3] || '2015-01-01 00'
 const DATE_FORMAT = 'YYYY-MM-DD HH'
 const BASE_URL = 'http://tisvcloud.freeway.gov.tw/history/TDCS/M06A/'
 const FILENAME = 'M06A_%1$s.tar.gz'
@@ -19,7 +19,7 @@ async function main() {
     db = await require('../common')()
 
     let importBaseDir = await checkSourceFile(filename)
-    await importToDB(importBaseDir, db)
+    await importToDB(importBaseDir, db, startDateTime, endDateTime)
   } catch (error) {
     console.log(error)
   }

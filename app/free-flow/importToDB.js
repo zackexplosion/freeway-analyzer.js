@@ -1,25 +1,15 @@
 const path = require('path')
 const fs = require('fs')
-// const cliProgress = require('cli-progress')
-const getVehicleType = require('../../lib/vehicleTypes')
-const getGentry = require('../../lib/gentries')
+const handleRawRow = require('./handleRawRow')
 const parseCSV = require('./parseCSV')
 const moment = require('moment')
-const ObjectId = require('mongoose').Types.ObjectId
+function readFiles(baseDir, startDateTime, endDateTime) {
+  const startHour = moment(startDateTime).hour()
+  const endHour = moment(endDateTime).hour()
 
-function calculateSpeed(d1, d2, length) {
-  // let duration = (d2 - d1) / 1000
-  let duration = moment.duration(new Date(d2) - new Date(d1))
-  let speed = (length / duration.asHours())
-  speed = Math.round(Math.abs(speed))
-  return speed
-}
-
-function readFiles(baseDir, startHour, endHour) {
-  if (startHour > 23 || startHour < 0 ) startHour = 0
-  if (endHour > 23 || endtHour < 0 ) endHour = 23
   let files = []
-  for (let i =0;i < 24; i++){
+  console.log('import files from', startDateTime, 'to', endDateTime)
+  for (let i =startHour;i <= endHour; i++){
     let hour = i
     if (hour < 10) {
       hour = '0' + i
@@ -41,93 +31,17 @@ function readFiles(baseDir, startHour, endHour) {
   return files
 }
 
-function handleRow(index, row) {
-  let i = 0
-  let details = row['tripDetails']
-  // let vehicleId =
-  //   row['vehicleType'] +
-  //   row['enterTime'] +
-  //   row['enterGentry'] +
-  //   row['exitTime'] +
-  //   row['exitGentry']
 
-  let vehicleId = ObjectId()
-  let tripStartDateTime = row['enterTime']
-  let result = []
-
-  // console.log('row', details)
-  do {
-    try {
-      // console.log('--')
-      // console.log(details[i])
-      let nextIndex = (details.length > 1) ? i + 1 : 0
-      let [startDateTime, startGentryId] = details[i].trim().split('+')
-      let [endDateTime, endGentryId] = details[nextIndex].trim().split('+')
-      let vehicleType = getVehicleType(row.vehicleType)
-      let startGentry = getGentry(startGentryId)
-      let endGentry = getGentry(endGentryId)
-      let tripLength = 0
-      let speed = 0
-
-      // prevent duplicate records
-      let key =
-              i.toString() + index.toString() +
-              row['vehicleType'] +
-              startGentryId +
-              endGentryId +
-              startDateTime +
-              endDateTime
-
-      // console.log('gentry', startGentryId, startGentry.locationMile, endGentry.locationMile)
-      if (startGentry && endGentry && startGentryId != endGentryId) {
-        tripLength = Math.abs(
-          getGentry(endGentryId).locationMile -
-          getGentry(startGentryId).locationMile
-        ).toFixed(1)
-
-        tripLength = parseFloat(tripLength)
-        speed = calculateSpeed(startDateTime, endDateTime, tripLength)
-      }
-
-      // console.log('tripLength', tripLength)
-      // console.log('speed', speed)
-      let row_to_insert = {
-        vehicleId,
-        key,
-        tripStartDateTime,
-        vehicleType,
-        startDateTime,
-        endDateTime,
-        startGentryId,
-        endGentryId,
-        startGentry,
-        endGentry,
-        tripLength,
-        speed
-      }
-
-      result.push(row_to_insert)
-      i++
-    } catch (error) {
-      console.log(error)
-    }
-  } while(i < details.length - 1)
-  return result
-}
-
-module.exports = function(baseDir, db) {
-  // console.log('db', db.models['Freeflow'])
-  // console.log('db', db.models.Freeflow.create)
-  // console.log(Object.keys(db.models))
+module.exports = function(baseDir, db, startHour, endHour) {
   return new Promise(async (resolve, reject) => {
-    let files = readFiles(baseDir)
+    let files = readFiles(baseDir, startHour, endHour)
     while(file = files.shift()) {
       console.log('Importing', file)
       // let rows = []
       let errors = 0
       let success = 0
       let rowsCount = await parseCSV(file, (index, row) => {
-        let result = handleRow(index, row)
+        let result = handleRawRow(index, row)
         db.models.Freeflow.insertMany(result, (err, d) => {
           let msg = `Processing line #${index}, success ${success}, errors ${errors}`
           if (err) {
