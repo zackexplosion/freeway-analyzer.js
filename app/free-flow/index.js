@@ -30,15 +30,19 @@ async function main() {
       }
     }
     console.log(query)
+    db.models.Freeflow.find(query, (err, d) => {
+      console.log('err', err)
+      console.log('d', d)
+    })
     // let records = await db.models.Freeflow.find(query)
     // console.log(records)
-    let importBaseDir = await checkSourceFile(filename)
-    await importToDB(importBaseDir, db, startDateTime, endDateTime)
+    // let importBaseDir = await checkSourceFile(filename)
+    // await importToDB(importBaseDir, db, startDateTime, endDateTime)
   } catch (error) {
     console.log(error)
   }
 
-  process.exit()
+  // process.exit()
 }
 
 

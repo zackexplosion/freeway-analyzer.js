@@ -1,3 +1,7 @@
+if( process.versions.node !== '13.1.0'){
+  throw `Wrong Node.js version \nCurrent: ${process.versions.node}, Required: 13.1.0`
+}
+
 const mongoose = require('mongoose')
 const ObjectId = require('mongoose').Types.ObjectId
 mongoose.set('useCreateIndex', true)
@@ -13,6 +17,8 @@ const DB_PORT = process.env.DB_PORT || 27017
 //   exitGentry: { type: String, index: true},
 //   tripLength: { type: Number, index: true},
 //   tripDetails: [String]
+
+
 // })
 
 mongoose.model('Freeflow', {
