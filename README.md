@@ -17,7 +17,7 @@
 
 
 ## 計算自由車流
-`docker-compose exec app npm run freeflow [START_DATETIME] [END_DATETIME] [START_GENTRY_ID]`
+`docker-compose exec app npm run freeflow [START_GENTRY_ID] [START_DATETIME] [END_DATETIME] `
 
 自動抓取缺少的資料並從高公局下載，但目前檢查是否已匯入的部份還有些小問題，因此結束時間拉長的話資料可能會不準確
 
