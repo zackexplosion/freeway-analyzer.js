@@ -1,23 +1,33 @@
+// packages
 const sprintf = require('sprintf-js').sprintf
-const download = require('./download')
-const extract = require('./extract')
-const importToDB = require('./importToDB')
-const printData = require('./printData')
 const moment = require('moment')
 const os = require('os')
 const fs = require('fs')
 const path = require('path')
-const startGentryId = process.argv[2] || '05F0000S'
-const FORMATTER_WITH_HOUR = 'YYYY-MM-DD HH'
-const startDateTime = moment(process.argv[3] || '2015-01-01 00', [FORMATTER_WITH_HOUR])
-// wrap moment again to copy object
-const endDateTime = moment(process.argv[4] || moment(startDateTime).add(1, 'hour'), FORMATTER_WITH_HOUR)
-const getSection = require('./getSection')
+
+
+// constants
 const BASE_URL = 'http://tisvcloud.freeway.gov.tw/history/TDCS/M06A/'
+const FORMATTER_WITH_HOUR = 'YYYY-MM-DD HH'
+
+// arguments
+const startGentryId = process.argv[2] || '05F0000S'
+const startDateTime = moment(process.argv[3] || '2015-01-01 00', [FORMATTER_WITH_HOUR])
+const endDateTime = moment(process.argv[4] || moment(startDateTime).add(1, 'hour'), FORMATTER_WITH_HOUR) // wrap moment again to copy object
+
+// local imports
+const download = require('./download')
+const extract = require('./extract')
+const importToDB = require('./importToDB')
+const printData = require('./printData')
+const getSection = require('./getSection')
+
+// TODO
+// improve checkfiles
 const FILENAME = 'M06A_%1$s.tar.gz'
 const filename = sprintf(FILENAME, startDateTime.format('YYYYMMDD'))
 
-// let hoursBetweenQuery = moment.duration(moment(endDateTime) - moment(startDateTime))
+// let hoursBetweenQuery = moment.duration(endDateTime - startDateTime)
 // let currentIndexDateTime = Object.assign({}, moment(startDateTime))
 // let requiredDataByHours = []
 
