@@ -65,3 +65,18 @@ if (isMainThread) {
 } else {
   workerThread()
 }
+
+
+moment = require('moment')
+startDate = moment('2016-06-09')
+var i = 0
+
+while ( startDate.isSame(moment('2016-11-17') ) ) {
+  let DATE = startDate.add(i, 'day')
+  console.log(`http://web.archive.org/web/20190417034627/http://tisvcloud.freeway.gov.tw/history/TDCS/M06A/M06A_${DATE.format('YYYYMMDD')}.tar.gz`)
+
+  if(i % 50 == 0) {
+    console.log('---')
+  }
+  i++
+}

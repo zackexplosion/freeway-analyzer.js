@@ -15,7 +15,7 @@ async function getSection(startGentryId, startDateTime, endDateTime) {
   console.log(query)
 
   let rows = await db.models.Freeflow.find(query).sort({speed: 1})
-  process.stdout.clearLine()
+  // process.stdout.clearLine()
   // process.stdout.moveCursor(0)
   // console.log('rows', rows.length)
   let speeds = {}
@@ -56,6 +56,7 @@ async function getSection(startGentryId, startDateTime, endDateTime) {
     direction,
     count: rows.length,
     invalidCount,
+    startGentryId,
     startGentry,
     endGentry
   }

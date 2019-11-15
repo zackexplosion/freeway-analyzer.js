@@ -1,11 +1,25 @@
-// TODO
-// web ui?
 
 var express = require('express')
 var app = express()
 
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
+
+const adapter = new FileSync('db.json')
+const lowdb = low(adapter)
+
+// Set some defaults (required if your JSON file is empty)
+lowdb.defaults({ freeflows: [], counter: 0 })
+  .write()
+
+
 app.get('/', function (req, res) {
-  res.send('Hello World!')
+  // Increment count
+  lowdb.update('counter', n => {
+    res.send('Hello World! #' + n)
+    return n + 1
+  })
+  .write()
 })
 
 async function main() {
