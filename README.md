@@ -1,19 +1,23 @@
 # Freeway-Analyzer.js
 
-請確認安裝 `node.js 13.`, `docker`, `docker-compose(macos的docker會一起安裝）`，並將專案放置在足夠的硬碟空間內（資料庫與專案會在同個目錄）
+計算由高公局提供的自由車流，目前使用的資料為M06A
 
-`node.js`可利用 `nvm` 安裝，請參考 https://noob.tw/nvm/
+<http://tisvcloud.freeway.gov.tw>
 
-安裝相依套件
-`npm install`
+## 準備工作
+請確認安裝 `docker`, `docker-compose`(macos的docker會一起安裝）
 
+可以用 <https://direnv.net> 設定 `DB_PATH` 環境變數，或是直接在cli指定，例如
 
-## 啟動資料庫
-可以用 https://direnv.net/ 設定 `DB_PATH` 環境變數，或是直接在cli指定，例如
+本專案需要佔用系統 `27017` 與 `4000` 兩個 PORT，請先確認無其他應用程式佔用
+
+### 啟動指令
+使用後會跑在背景，第一次會比較久，因為要 build image
 `DB_PATH=/var/url/db docker-compose up -d`
 
+
 ## 計算自由車流
-`npm run freeflow [START_DATETIME] [END_DATETIME] [START_GENTRY_ID]`
+`docker-compose exec app npm run freeflow [START_DATETIME] [END_DATETIME] [START_GENTRY_ID]`
 
 自動抓取缺少的資料並從高公局下載，但目前檢查是否已匯入的部份還有些小問題，因此結束時間拉長的話資料可能會不準確
 
@@ -25,8 +29,15 @@
 
 ![](https://i.imgur.com/e0y8acG.png)
 
+## 本地 Node.js
+如果你使用本機的Node.js開發，請安裝`node.js 13.`
 
-# 更新門架資料
+`node.js`可利用 `nvm` 安裝，請參考 https://noob.tw/nvm/
+
+安裝相依套件
+`npm install`
+
+## 更新門架資料
 
 目前還沒連網自動抓最新的，只能從本地的etag.xml更新
 `node lib/gentries.js update > lib/_gentries.js`

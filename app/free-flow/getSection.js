@@ -1,7 +1,7 @@
 const moment = require('moment')
 const getGentry = require('../../lib/gentries')
 
-async function getSection(db, startGentryId, startDateTime, endDateTime) {
+async function getSection(startGentryId, startDateTime, endDateTime) {
   let query = {
     startGentryId: startGentryId,
     startDateTime: {

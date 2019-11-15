@@ -39,26 +39,39 @@ function buildRawFilePath(baseDir, targetDateTime) {
 async function main() {
   var hrstart = process.hrtime()
   try {
+    // set db as global variable
     db = await require('../common')
     global.db = db
+
+    // find missing raw data in database
     let missingRawDataByRange = await getMissingRawDataByRange()
 
-    while (missingDate = missingRawDataByRange.shift()) {
-      let importBaseDir = await checkSourceFile(missingDate)
+    // TODO
+    // Make it multithread?
+    while (missingDateTime = missingRawDataByRange.shift()) {
+      // if the raw data are missing, check the source file
+      // if source file not exist, download it
+      let importBaseDir = await checkSourceFile(missingDateTime)
 
-      let filePath = buildRawFilePath(importBaseDir, missingDate)
+      // import missing data by missingDatetime
+      let filePath = buildRawFilePath(importBaseDir, missingDateTime)
 
+      // if the file path build success, import to database
       if (filePath) {
         let msg = await importToDB(filePath)
         console.log(msg)
       }
     }
 
-    let r = await getSection(db, startGentryId, startDateTime, endDateTime)
+    // count the free flow by startGentryId
+    let r = await getSection(startGentryId, startDateTime, endDateTime)
+
+    // print data with babar cli-chart
     printData(r)
   } catch (error) {
     console.log(error)
   }
+
   var hrend = process.hrtime(hrstart)
   console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
   process.exit()

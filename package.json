@@ -8,6 +8,7 @@
     "cli-progress": "^3.3.1",
     "cli-table3": "^0.5.1",
     "download-file-with-progressbar": "^1.2.3",
+    "express": "^4.17.1",
     "fast-csv": "^3.4.0",
     "humanize-duration": "^3.21.0",
     "moment": "^2.24.0",
@@ -18,6 +19,7 @@
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node app/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "freeflow": "node ./app/free-flow/index.js",
     "inspect": "node ./app/details.js"
