@@ -25,6 +25,17 @@
 | startDateTime   | 2017-07-07 00:00:00  | 2015-01-01 00:00:00     |
 | endDateTime    | 2017-07-07 12:00:00  | 2016-01-01 00:00:00     |
 
+## 計算自由車流（未完成）
+`node app/free-flow/getSection.js START_GENTRY_ID START_DATETIME [END_DATETIME]`
+
+| Param       | Example              | Default  |
+| ------      | -------------------  | ------------ |
+| START_GENTRY_ID     | 03F2899N       | 01F3676S |
+| START_DATETIME   | 2017-07-07 00      | 2015-01-01 00 |
+| END_DATETIME   | 2017-07-07 23      | 2015-01-01 01(預設為開始時間加一小時） |
+
+![](https://i.imgur.com/MvPmS79.png)
+
 ## 計算單筆資料
 
 `npm run inspect OBJECT_ID`
