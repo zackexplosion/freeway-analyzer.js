@@ -17,7 +17,10 @@ async function main() {
     let {
       speeds,
       endGentry,
-      count
+      count,
+      invalidCount,
+      direction,
+      _85th
     } = await getSection(startGentryId, startDateTime, endDateTime)
 
     if(speeds.length == 0) {
@@ -26,10 +29,12 @@ async function main() {
     }
 
     console.log('')
-    console.log('Time Range:', startDateTime.format(_formatter), 'to', endDateTime.format(_formatter))
+    console.log('時間範圍:', startDateTime.format(_formatter), 'to', endDateTime.format(_formatter))
+    console.log('車輛總計:', count, '無效:', invalidCount)
+    console.log('方向:', direction)
+    console.log('85th:', _85th, 'KM/h')
     console.log('起點:',`${startGentry.sectionStart} ${startGentry.locationMileRaw}`)
     console.log('終點:',`${endGentry.sectionStart} ${endGentry.locationMileRaw}`)
-    console.log('車輛:', count)
     let babarData = []
     // let maxY = 0
     // console.log(speeds)
@@ -69,27 +74,45 @@ async function getSection(startGentryId, startDateTime, endDateTime) {
   process.stdout.write('querying....')
   console.log(query)
 
-  let rows = await db.models.Freeflow.find(query).sort({speed: -1})
+  let rows = await db.models.Freeflow.find(query).sort({speed: 1})
   process.stdout.clearLine()
   // process.stdout.moveCursor(0)
   // console.log('rows', rows.length)
   let speeds = {}
+  let invalidCount = 0
   let endGentry = ''
+  let direction
+  // rows.
+  var _85th = 0
+  var validSpeeds = []
   rows.forEach(r => {
-    // console.log(r.startDateTime)
     if ( typeof speeds[r.speed] === 'undefined') {
       speeds[r.speed] = 0
     }
 
-    if(!endGentry) {
+    if(!endGentry && r.endGentryId != r.startGentryId) {
       endGentry = getGentry(r.endGentryId)
+      direction = r.endGentryId[r.endGentryId.length -1]
+    }
+
+    if(r.speed === 0) {
+      invalidCount++
+    } else {
+      validSpeeds.push(r.speed)
     }
     // console.log(r.startDateTime)
     speeds[r.speed] = speeds[r.speed] + 1
   })
+
+  _85th = parseInt((rows.length - invalidCount) * 0.85)
+  _85th = validSpeeds[_85th]
+
   return {
+    _85th,
     speeds,
+    direction,
     count: rows.length,
+    invalidCount,
     endGentry
   }
 }
