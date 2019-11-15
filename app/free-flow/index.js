@@ -5,7 +5,6 @@ const os = require('os')
 const fs = require('fs')
 const path = require('path')
 
-
 // constants
 const BASE_URL = 'http://tisvcloud.freeway.gov.tw/history/TDCS/M06A/'
 const FORMATTER_WITH_HOUR = 'YYYY-MM-DD HH'
@@ -26,44 +25,18 @@ const getSection = require('./getSection')
 // improve checkfiles
 const FILENAME = 'M06A_%1$s.tar.gz'
 const filename = sprintf(FILENAME, startDateTime.format('YYYYMMDD'))
-
-// let hoursBetweenQuery = moment.duration(endDateTime - startDateTime)
-// let currentIndexDateTime = Object.assign({}, moment(startDateTime))
-// let requiredDataByHours = []
-
-// console.log(currentIndexDateTime)
-// console.log(endDateTime)
-// console.log(currentIndexDateTime.isSame(endDateTime))
-
-// while(!moment(endDateTime).isSame(currentIndexDateTime)) {
-//   requiredDataByHours.push(currentIndexDateTime.format(FORMATTER_WITH_HOUR))
-//   currentIndexDateTime = moment(currentIndexDateTime).add(1, 'hour')
-// }
-
-// console.log(requiredDataByHours)
-
-// console.log('hoursBetweenQuery', hoursBetweenQuery)
-// process.exit()
+var db
 async function main() {
   var hrstart = process.hrtime()
   try {
-    let db = await require('../common')
+    db = await require('../common')
+    let missingRawDataByRange = await getMissingRawDataByRange()
 
-    let query = {
-      // 車子有可能是從其他時段經過的，所以多這個欄位特地給第一次檢查看看資料有沒有匯入
-      tripStartDateTime: {
-        $gte: startDateTime.toISOString(),
-        $lte: endDateTime.toISOString()
-      }
-    }
-    console.log('Checking if raw data imported')
-    console.log(query)
-    let records = await db.models.Freeflow.find(query)
-    if (records.length <= 0) {
-      console.log('records not found')
-      let importBaseDir = await checkSourceFile(filename)
-      let r = await importToDB(importBaseDir, db, startDateTime, endDateTime)
-      console.info(r)
+    while (missingDate = missingRawDataByRange.shift()) {
+      // let missingDate = missingRawDataByRange.shift()
+      // let importBaseDir = await checkSourceFile(missingDate)
+      // let r = await importToDB(importBaseDir, db, startDateTime, endDateTime)
+      // console.log(missingDate)
     }
 
     let r = await getSection(db, startGentryId, startDateTime, endDateTime)
@@ -76,8 +49,32 @@ async function main() {
   process.exit()
 }
 
-async function checkSourceFile () {
-  let targetDir = path.join(os.tmpdir(), 'M06A/', startDateTime.format('YYYYMMDD'))
+async function getMissingRawDataByRange() {
+  console.log('Checking if raw data imported')
+  let hoursBetweenQuery = moment.duration(endDateTime - startDateTime).asHours()
+  let currentIndexDateTime = moment(startDateTime)
+  let missingRawDataByRange = []
+  for (let i = 0; i <= hoursBetweenQuery; i++) {
+    let query = {
+      // 車子有可能是從其他時段經過的，所以多這個欄位特地給第一次檢查看看資料有沒有匯入
+      tripStartDateTime: {
+        $gte: currentIndexDateTime.toISOString(),
+        $lte: moment(currentIndexDateTime).add(1, 'hour').toISOString()
+      }
+    }
+    // console.log(query, endDateTime.format(FORMATTER_WITH_HOUR), startDateTime.format(FORMATTER_WITH_HOUR))
+    let records = await db.models.Freeflow.findOne(query)
+    if(!records) {
+      missingRawDataByRange.push(currentIndexDateTime.format(FORMATTER_WITH_HOUR))
+    }
+
+    currentIndexDateTime.add(1, 'hour')
+  }
+  return missingRawDataByRange
+}
+
+async function checkSourceFile (targetDateTime) {
+  let targetDir = path.join(os.tmpdir(), 'M06A/', moment(targetDateTime).format('YYYYMMDD'))
   let dirExist = fs.existsSync(targetDir)
   let fileUrl = BASE_URL + filename
   // let rawFilePath = path.join(os.tmpdir(), filename)
