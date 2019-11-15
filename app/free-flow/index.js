@@ -8,6 +8,7 @@ const path = require('path')
 // constants
 const BASE_URL = 'http://tisvcloud.freeway.gov.tw/history/TDCS/M06A/'
 const FORMATTER_WITH_HOUR = 'YYYY-MM-DD HH'
+const FILENAME = 'M06A_%1$s.tar.gz'
 
 // arguments
 const startGentryId = process.argv[2] || '05F0000S'
@@ -21,22 +22,36 @@ const importToDB = require('./importToDB')
 const printData = require('./printData')
 const getSection = require('./getSection')
 
-// TODO
-// improve checkfiles
-const FILENAME = 'M06A_%1$s.tar.gz'
-const filename = sprintf(FILENAME, startDateTime.format('YYYYMMDD'))
+
 var db
+
+function buildRawFilePath(baseDir, targetDateTime) {
+  let hour = moment(targetDateTime).format('HH')
+  let YYYYMMDD = moment(targetDateTime).format('YYYYMMDD')
+  let file_path = path.join(baseDir, hour, `TDCS_M06A_${YYYYMMDD}_${hour}0000.csv`)
+
+  if (fs.existsSync(file_path)) {
+    return file_path
+  } else {
+    return false
+  }
+}
 async function main() {
   var hrstart = process.hrtime()
   try {
     db = await require('../common')
+    global.db = db
     let missingRawDataByRange = await getMissingRawDataByRange()
 
     while (missingDate = missingRawDataByRange.shift()) {
-      // let missingDate = missingRawDataByRange.shift()
-      // let importBaseDir = await checkSourceFile(missingDate)
-      // let r = await importToDB(importBaseDir, db, startDateTime, endDateTime)
-      // console.log(missingDate)
+      let importBaseDir = await checkSourceFile(missingDate)
+
+      let filePath = buildRawFilePath(importBaseDir, missingDate)
+
+      if (filePath) {
+        let msg = await importToDB(filePath)
+        console.log(msg)
+      }
     }
 
     let r = await getSection(db, startGentryId, startDateTime, endDateTime)
@@ -64,7 +79,7 @@ async function getMissingRawDataByRange() {
     }
     // console.log(query, endDateTime.format(FORMATTER_WITH_HOUR), startDateTime.format(FORMATTER_WITH_HOUR))
     let records = await db.models.Freeflow.findOne(query)
-    if(!records) {
+    if (!records) {
       missingRawDataByRange.push(currentIndexDateTime.format(FORMATTER_WITH_HOUR))
     }
 
@@ -74,9 +89,11 @@ async function getMissingRawDataByRange() {
 }
 
 async function checkSourceFile (targetDateTime) {
-  let targetDir = path.join(os.tmpdir(), 'M06A/', moment(targetDateTime).format('YYYYMMDD'))
+  targetDateTime = moment(targetDateTime).format('YYYYMMDD')
+  let targetDir = path.join(os.tmpdir(), 'M06A/', targetDateTime)
   let dirExist = fs.existsSync(targetDir)
-  let fileUrl = BASE_URL + filename
+  const filename = sprintf(FILENAME, targetDateTime)
+  const fileUrl = BASE_URL + filename
   // let rawFilePath = path.join(os.tmpdir(), filename)
   // let rawFileExists = fs.existsSync(rawFilePath)
   if (!dirExist) {

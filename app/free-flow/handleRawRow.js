@@ -3,11 +3,21 @@ const getGentry = require('../../lib/gentries')
 const ObjectId = require('mongoose').Types.ObjectId
 const moment = require('moment')
 function calculateSpeed(d1, d2, length) {
+  d1 = moment(d1)
+  d2 = moment(d2)
   // let duration = (d2 - d1) / 1000
-  let duration = moment.duration(new Date(d2) - new Date(d1))
+  let duration = moment.duration(d2 - d1)
   let speed = (length / duration.asHours())
   speed = Math.round(Math.abs(speed))
-  return speed
+
+  // if(isNaN(speed)){
+  //   console.log('duration', duration.asHours())
+  //   console.log('length', length)
+  //   console.log(d1.format())
+  //   console.log(d2.format())
+  //   process.exit()
+  // }
+  // return speed
 }
 
 function handleRow(index, row) {
@@ -48,14 +58,21 @@ function handleRow(index, row) {
               endDateTime
 
       // console.log('gentry', startGentryId, startGentry.locationMile, endGentry.locationMile)
-      if (startGentry && endGentry && startGentryId != endGentryId) {
+      // console.log('typeof startGentry', typeof startGentry)
+      // // console.log(startGentry)
+      if (typeof startGentry === 'object' &&
+          typeof endGentry === 'object' &&
+          startGentryId != endGentryId)
+      {
         tripLength = Math.abs(
           getGentry(endGentryId).locationMile -
           getGentry(startGentryId).locationMile
         ).toFixed(1)
 
         tripLength = parseFloat(tripLength)
-        speed = calculateSpeed(startDateTime, endDateTime, tripLength)
+        if (!isNaN(tripLength)) {
+          speed = calculateSpeed(startDateTime, endDateTime, tripLength)
+        }
       }
 
       // console.log('tripLength', tripLength)
