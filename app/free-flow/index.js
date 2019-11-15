@@ -2,52 +2,72 @@ const sprintf = require('sprintf-js').sprintf
 const download = require('./download')
 const extract = require('./extract')
 const importToDB = require('./importToDB')
+const printData = require('./printData')
 const moment = require('moment')
 const os = require('os')
 const fs = require('fs')
 const path = require('path')
-const startDateTime = process.argv[2] || '2015-01-01 00'
-const endDateTime = process.argv[3] || '2015-01-01 00'
-const DATE_FORMAT = 'YYYY-MM-DD HH'
+const startGentryId = process.argv[2] || '05F0000S'
+const FORMATTER_WITH_HOUR = 'YYYY-MM-DD HH'
+const startDateTime = moment(process.argv[3] || '2015-01-01 00', [FORMATTER_WITH_HOUR])
+// wrap moment again to copy object
+const endDateTime = moment(process.argv[4] || moment(startDateTime).add(1, 'hour'), FORMATTER_WITH_HOUR)
+const getSection = require('./getSection')
 const BASE_URL = 'http://tisvcloud.freeway.gov.tw/history/TDCS/M06A/'
 const FILENAME = 'M06A_%1$s.tar.gz'
-const filename = sprintf(FILENAME, moment(startDateTime).format('YYYYMMDD'))
-// console.log(startDateTime, endDateTime)
+const filename = sprintf(FILENAME, startDateTime.format('YYYYMMDD'))
+
+// let hoursBetweenQuery = moment.duration(moment(endDateTime) - moment(startDateTime))
+// let currentIndexDateTime = Object.assign({}, moment(startDateTime))
+// let requiredDataByHours = []
+
+// console.log(currentIndexDateTime)
+// console.log(endDateTime)
+// console.log(currentIndexDateTime.isSame(endDateTime))
+
+// while(!moment(endDateTime).isSame(currentIndexDateTime)) {
+//   requiredDataByHours.push(currentIndexDateTime.format(FORMATTER_WITH_HOUR))
+//   currentIndexDateTime = moment(currentIndexDateTime).add(1, 'hour')
+// }
+
+// console.log(requiredDataByHours)
+
+// console.log('hoursBetweenQuery', hoursBetweenQuery)
+// process.exit()
 async function main() {
-  let db
+  var hrstart = process.hrtime()
   try {
-    db = await require('../common')
-    // console.log(db.connections)
-    const Freeflow = db.models.Freeflow
+    let db = await require('../common')
 
     let query = {
       // 車子有可能是從其他時段經過的，所以多這個欄位特地給第一次檢查看看資料有沒有匯入
       tripStartDateTime: {
-        $gte: moment(startDateTime).toISOString()
-      },
-      endDateTime: {
-        $lte: moment(endDateTime).toISOString()
+        $gte: startDateTime.toISOString(),
+        $lte: endDateTime.toISOString()
       }
     }
+    console.log('Checking if raw data imported')
     console.log(query)
-    db.models.Freeflow.find(query, (err, d) => {
-      console.log('err', err)
-      console.log('d', d)
-    })
-    // let records = await db.models.Freeflow.find(query)
-    // console.log(records)
-    // let importBaseDir = await checkSourceFile(filename)
-    // await importToDB(importBaseDir, db, startDateTime, endDateTime)
+    let records = await db.models.Freeflow.find(query)
+    if (records.length <= 0) {
+      console.log('records not found')
+      let importBaseDir = await checkSourceFile(filename)
+      let r = await importToDB(importBaseDir, db, startDateTime, endDateTime)
+      console.info(r)
+    }
+
+    let r = await getSection(db, startGentryId, startDateTime, endDateTime)
+    printData(r)
   } catch (error) {
     console.log(error)
   }
-
-  // process.exit()
+  var hrend = process.hrtime(hrstart)
+  console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
+  process.exit()
 }
 
-
 async function checkSourceFile () {
-  let targetDir = path.join(os.tmpdir(), 'M06A/', moment(startDateTime).format('YYYYMMDD'))
+  let targetDir = path.join(os.tmpdir(), 'M06A/', startDateTime.format('YYYYMMDD'))
   let dirExist = fs.existsSync(targetDir)
   let fileUrl = BASE_URL + filename
   // let rawFilePath = path.join(os.tmpdir(), filename)

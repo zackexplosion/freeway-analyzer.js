@@ -19,6 +19,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "freeflow": "node ./app/free-flow/index.js",
     "inspect": "node ./app/details.js"
   },
   "author": "",
