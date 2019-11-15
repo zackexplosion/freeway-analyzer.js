@@ -12,12 +12,25 @@ const DATE_FORMAT = 'YYYY-MM-DD HH'
 const BASE_URL = 'http://tisvcloud.freeway.gov.tw/history/TDCS/M06A/'
 const FILENAME = 'M06A_%1$s.tar.gz'
 const filename = sprintf(FILENAME, moment(startDateTime).format('YYYYMMDD'))
-
+// console.log(startDateTime, endDateTime)
 async function main() {
   let db
   try {
     db = await require('../common')()
+    // console.log(db.connections)
+    const Freeflow = db.models.Freeflow
 
+    let query = {
+      tripStartDateTime: {
+        $gte: moment(startDateTime).toISOString()
+      },
+      endDateTime: {
+        $lte: moment(endDateTime).toISOString()
+      }
+    }
+    console.log(query)
+    // let records = await db.models.Freeflow.find(query)
+    // console.log(records)
     let importBaseDir = await checkSourceFile(filename)
     await importToDB(importBaseDir, db, startDateTime, endDateTime)
   } catch (error) {

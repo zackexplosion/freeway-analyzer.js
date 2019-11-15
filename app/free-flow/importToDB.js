@@ -33,6 +33,7 @@ function readFiles(baseDir, startDateTime, endDateTime) {
 
 
 module.exports = function(baseDir, db, startHour, endHour) {
+  const Freeflow = db.models.Freeflow
   return new Promise(async (resolve, reject) => {
     let files = readFiles(baseDir, startHour, endHour)
     while(file = files.shift()) {
@@ -42,7 +43,7 @@ module.exports = function(baseDir, db, startHour, endHour) {
       let success = 0
       let rowsCount = await parseCSV(file, (index, row) => {
         let result = handleRawRow(index, row)
-        db.models.Freeflow.insertMany(result, (err, d) => {
+        Freeflow.insertMany(result, (err, d) => {
           let msg = `Processing line #${index}, success ${success}, errors ${errors}`
           if (err) {
             errors++
