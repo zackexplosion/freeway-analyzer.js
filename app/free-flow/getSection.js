@@ -55,7 +55,7 @@ async function main() {
 main()
 
 async function getSection(startGentryId, startDateTime, endDateTime) {
-  db = await require('../common')()
+  db = await require('../common')
   let query = {
     startGentryId: startGentryId,
     startDateTime: {

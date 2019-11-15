@@ -21,7 +21,7 @@
 | Param       | Example              | Default  |
 | ------      | -------------------  | ------------ |
 | START_DATETIME   | 2017-07-07 00      | 2015-01-01 00 |
-| END_DATETIME   | 2017-07-07 23      | 2015-01-01 0 |
+| END_DATETIME   | 2017-07-07 23      | 2015-01-01 00 |
 
 ## 計算自由車流（未完成）
 `node app/free-flow/getSection.js START_GENTRY_ID START_DATETIME [END_DATETIME]`

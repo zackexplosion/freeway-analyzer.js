@@ -16,11 +16,12 @@ const filename = sprintf(FILENAME, moment(startDateTime).format('YYYYMMDD'))
 async function main() {
   let db
   try {
-    db = await require('../common')()
+    db = await require('../common')
     // console.log(db.connections)
     const Freeflow = db.models.Freeflow
 
     let query = {
+      // 車子有可能是從其他時段經過的，所以多這個欄位特地給第一次檢查看看資料有沒有匯入
       tripStartDateTime: {
         $gte: moment(startDateTime).toISOString()
       },

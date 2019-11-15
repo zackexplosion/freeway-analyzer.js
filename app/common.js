@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const ObjectId = require('mongoose').Types.ObjectId
 mongoose.set('useCreateIndex', true)
-const DB_HOST = process.env.DB_HOST || 'db'
+const DB_HOST = process.env.DB_HOST || '127.0.0.1'
 const DB_PORT = process.env.DB_PORT || 27017
 
 
@@ -15,7 +15,7 @@ const DB_PORT = process.env.DB_PORT || 27017
 //   tripDetails: [String]
 // })
 
-var Freeflow = mongoose.model('Freeflow', {
+mongoose.model('Freeflow', {
   key: { type: String, index: true, unique: true},
   vehicleId: { type: String, index: true},
   vehicleType: { type: String, index: true},
@@ -30,32 +30,10 @@ var Freeflow = mongoose.model('Freeflow', {
   speed: { type: Number, index: true}
 })
 
-// Freeflow.schema.index({
-//   vehicleId:1,
-//   vehicleType: 1,
-//   startDateTime: 1,
-//   startGentryId: 1,
-//   endDateTime: 1,
-//   endGentryId: 1
-// }, {
-//   unique: true
-// })
-
-module.exports = function(cb){
-  let url = `mongodb://${DB_HOST}:${DB_PORT}/freeway`
-  let options = {
-    useNewUrlParser: true,
-    reconnectTries: Number.MAX_VALUE,
-    useUnifiedTopology: true
-  }
-  if (cb) {
-    mongoose.connect(url, options).then(() => {
-      return cb(null, Models)
-    }, err => {
-      return cb(err, null)
-    })
-  } else {
-    return mongoose.connect(url, options)
-  }
-
+let url = `mongodb://${DB_HOST}:${DB_PORT}/freeway`
+let options = {
+  useNewUrlParser: true,
+  reconnectTries: Number.MAX_VALUE,
+  useUnifiedTopology: true
 }
+module.exports = mongoose.connect(url, options)
