@@ -1,6 +1,6 @@
 # Freeway-Analyzer.js
 
-確認安裝 `node.js 13.`, `docker`, `docker-compose(macos的docker會一起安裝）`，並將專案放置在足夠的硬碟空間內（資料庫與專案會在同個目錄）
+請確認安裝 `node.js 13.`, `docker`, `docker-compose(macos的docker會一起安裝）`，並將專案放置在足夠的硬碟空間內（資料庫與專案會在同個目錄）
 
 `node.js`可利用 `nvm` 安裝，請參考 https://noob.tw/nvm/
 
@@ -15,7 +15,7 @@
 ## 計算自由車流
 `npm run freeflow [START_DATETIME] [END_DATETIME] [START_GENTRY_ID]`
 
-會自動抓取缺少的資料並且重高公局下載，但目前檢查是否已匯入的部份還有些小問題，因此結束時間拉長的話資料可能會不準確
+自動抓取缺少的資料並從高公局下載，但目前檢查是否已匯入的部份還有些小問題，因此結束時間拉長的話資料可能會不準確
 
 | Param       | Example             | Default  |
 | ------      | ------------------- | ------------ |
@@ -23,15 +23,8 @@
 | START_DATETIME   | 2017-07-07 00  | 2015-01-01 00 |
 | END_DATETIME   | 2017-07-07 23    | 2015-01-01 01(預設為開始時間加一小時） |
 
-![](https://i.imgur.com/MvPmS79.png)
+![](https://i.imgur.com/e0y8acG.png)
 
-## 計算單筆資料
-
-`npm run inspect OBJECT_ID`
-
-| Param       | Example              | Default  |
-| ------      | -------------------  | ------------ |
-| OBJECT_ID   | 5dcb31e3bae71011669b8f6e       | 無，必填 |
 
 # 更新門架資料
 
