@@ -1,6 +1,6 @@
-
-var express = require('express')
-var app = express()
+const cors = require('cors')
+const express = require('express')
+const app = express()
 
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
@@ -8,33 +8,37 @@ const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync('db.json')
 const lowdb = low(adapter)
 
+var db
+
 // Set some defaults (required if your JSON file is empty)
 lowdb.defaults({ freeflows: [], counter: 0 })
   .write()
 
-
+app.use(cors())
 app.get('/', function (req, res) {
   // Increment count
   lowdb.update('counter', n => {
     res.send('Hello World! #' + n)
     return n + 1
   })
-  .write()
+    .write()
 })
 
 app.get('/sections', function (req, res) {
   // Increment count
   let list = lowdb.get('freeflows').value().map(f => {
     return {
+      sectionRange: `${f.startGentry.sectionStart} ~ ${f.startGentry.sectionEnd}`,
       startGentryId: f.startGentryId,
       startGentry: f.startGentry,
-      endGentry: f.endGentry
+      endGentry: f.endGentry,
+      _85th: f._85th
     }
   })
   res.json(list)
 })
 
-async function main() {
+async function main () {
   // var hrstart = process.hrtime()
   try {
     // set db as global variable
@@ -43,8 +47,7 @@ async function main() {
     app.listen(PORT, function () {
       console.log(`Example app listening on port ${PORT}!`)
     })
-  }
-  catch(e){
+  } catch (e) {
     console.log(e)
   }
 }
