@@ -1,10 +1,6 @@
 <template>
 <div>
-  <ul>
-    <li>車輛總計 {{data.count}}輛, 無效資料 {{data.invalidCount}}輛</li>
-    <li>行駛方向 {{data.direction}}</li>
-    <li>85分位 {{data._85th}} KM/h </li>
-  </ul>
+
   <div class="chart">
     <line-chart
       v-if="loaded"

@@ -1,8 +1,11 @@
 <template>
 <div>
+  <!-- <div class="input-group" slot="header">
+    <input v-model="search" widht="" type="" class="ob-search-input ob-shadow search-input mr-3" placeholder="YEE">
+  </div> -->
   <el-table
     highlight-current-row
-    :data="sections"
+    :data="sectionsFiltered"
     height="200"
     style="width: 100%"
     @current-change="handleCurrentChange"
@@ -47,14 +50,14 @@
       </template>
     </el-table-column>
   </el-table>
-  <ul>
-    <li>車輛總計 {{data.count}}輛, 無效資料 {{data.invalidCount}}輛</li>
-    <li>行駛方向 {{data.direction}}</li>
-    <li>85分位 {{data._85th}} KM/h </li>
-  </ul>
-  <div class="chart">
+  <div
+    v-if="loaded"
+    class="chart"
+  >
+    <article>
+      車輛總計: {{data.count}} 輛, 無效資料: {{data.invalidCount}} 輛, 行駛方向: {{data.direction}}, 85分位: {{data._85th}} KM/h
+    </article>
     <line-chart
-      v-if="loaded"
       :chart-data="chartData"
     />
   </div>
@@ -71,6 +74,7 @@ export default {
   },
   data () {
     return {
+      search: '',
       sections: [],
       data: {},
       loaded: false,
@@ -91,9 +95,31 @@ export default {
       this.sections = sections
     })
   },
+  computed: {
+    sectionsFiltered () {
+      // TODO
+      // implement filter function
+      return this.sections.filter(data => {
+        // console.log(data.startGentryId)
+        if (!this.search) return true
+
+        return true
+        // if(data)
+        // data.name.toLowerCase().includes(this.search.toLowerCase())
+      })
+    }
+  },
   methods: {
+    searchData (sections) {
+      console.log('sections', sections)
+      return sections.filter(data => {
+        if (!this.search) {
+          return data
+        }
+        // !this.search || data.name.toLowerCase().includes(this.search.toLowerCase())
+      })
+    },
     handleCurrentChange (row) {
-      console.log(row)
       this.loaded = false
       request('/sections/' + row.startGentryId).then(res => {
         this.data = res
@@ -112,9 +138,6 @@ export default {
         this.loaded = true
       })
     },
-    handleClick (row) {
-      // this.$router.push('/freeflow/' + row.startGentryId)
-    },
     sectionRange (row, col) {
       let s = row.startGentry
       let e = row.endGentry
@@ -131,5 +154,7 @@ export default {
 </script>
 
 <style scoped>
-
+.chart article {
+  padding:2em;
+}
 </style>
