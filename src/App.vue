@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <h1>Freeway Analyzer 2015</h1>
+    <h1>Freeway Analyzer</h1>
+    <h6>2015/01/01 00 ~ 2015/01/01 04</h6>
     <router-view/>
   </div>
 </template>
@@ -18,6 +19,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  /* margin-top: 60px; */
 }
 </style>

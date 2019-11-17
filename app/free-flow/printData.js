@@ -1,8 +1,7 @@
 const babar = require('babar')
 const moment = require('moment')
 
-function printData(sectionData) {
-
+function printData (sectionData) {
   let _formatter = 'YYYY/MM/DD HH'
   try {
     let {

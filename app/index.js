@@ -25,17 +25,33 @@ app.get('/', function (req, res) {
 })
 
 app.get('/sections', function (req, res) {
-  // Increment count
-  let list = lowdb.get('freeflows').value().map(f => {
-    return {
-      sectionRange: `${f.startGentry.sectionStart} ~ ${f.startGentry.sectionEnd}`,
+  let list = []
+  let rows = lowdb.get('freeflows').value()
+  rows.map(f => {
+    let _85th = isNaN(f._85th) ? -1 : f._85th
+    let tripLength = Math.abs(f.endGentry.locationMile - f.startGentry.locationMile).toFixed(2)
+
+    if (isNaN(tripLength)) {
+      tripLength = -1
+      return false
+    }
+
+    list.push({
       startGentryId: f.startGentryId,
       startGentry: f.startGentry,
       endGentry: f.endGentry,
-      _85th: f._85th
-    }
+      tripLength,
+      _85th
+    })
   })
   res.json(list)
+})
+app.get('/sections/:id', function (req, res) {
+  let query = {
+    startGentryId: req.params.id
+  }
+  let row = lowdb.get('freeflows').find(query).value()
+  res.json(row)
 })
 
 async function main () {
