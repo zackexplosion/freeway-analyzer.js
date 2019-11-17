@@ -22,6 +22,18 @@ app.get('/', function (req, res) {
   .write()
 })
 
+app.get('/sections', function (req, res) {
+  // Increment count
+  let list = lowdb.get('freeflows').value().map(f => {
+    return {
+      startGentryId: f.startGentryId,
+      startGentry: f.startGentry,
+      endGentry: f.endGentry
+    }
+  })
+  res.json(list)
+})
+
 async function main() {
   // var hrstart = process.hrtime()
   try {
