@@ -15,14 +15,6 @@ lowdb.defaults({ freeflows: [], counter: 0 })
   .write()
 
 app.use(cors())
-app.get('/', function (req, res) {
-  // Increment count
-  lowdb.update('counter', n => {
-    res.send('Hello World! #' + n)
-    return n + 1
-  })
-    .write()
-})
 
 app.get('/sections', function (req, res) {
   let list = []
