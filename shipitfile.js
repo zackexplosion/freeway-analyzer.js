@@ -14,10 +14,11 @@ module.exports = function (shipit) {
   })
 
   shipit.task('updateAssets', async () => {
-    await shipit.local(`npm run build`)
+    // await shipit.local(`npm run build`)
+    // console.log(shipit.config.deployTo)
     await shipit.copyToRemote(
       './dist',
-      shipit.currentPath,
+      shipit.config.deployTo + '/current',
     )
   })
 
@@ -28,7 +29,7 @@ module.exports = function (shipit) {
       await shipit.remote(`cd ${shipit.currentPath} && nvm use && npm install`)
       await shipit.copyToRemote(
         './dist',
-        shipit.currentPath,
+        shipit.deployTo,
       )
     } catch (error) {
       console.log(error)
