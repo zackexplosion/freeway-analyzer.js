@@ -6,7 +6,7 @@ module.exports = function (shipit) {
     default: {
       workspace: '/tmp/github-monitor',
       deployTo: '/app/' + name,
-      repositoryUrl: 'https://github.com/zackexplosion/rip-g8iker.com',
+      repositoryUrl: 'https://github.com/ttsa/freeway-analyzer.js',
     },
     production: {
       servers: 'zack@YEE'
@@ -16,9 +16,10 @@ module.exports = function (shipit) {
   shipit.on('deployed', async function () {
     // var shared_path = `${shipit.config.deployTo}/shared`
     try {
-      await shipit.remote(`cd ${shipit.currentPath} && nvm use && yarn`)
+      await shipit.local(`npm run build`)
+      await shipit.remote(`cd ${shipit.currentPath} && nvm use && npm install`)
       await shipit.copyToRemote(
-        './build',
+        './dist',
         shipit.currentPath,
       )
     } catch (error) {
@@ -31,9 +32,10 @@ module.exports = function (shipit) {
   shipit.task('startApp', async () => {
     const current_path = `${shipit.config.deployTo}/current`
     try {
-      await shipit.remote(`pm2 start ${current_path}/server.js --name ${name}`)
+      await shipit.remote(`cd ${current_path} && PORT=4000 npm run express:run`)
+      // await shipit.remote(`pm2 start ${current_path}/srv/index.js --name ${name}`)
     } catch (error) {
-      await shipit.remote(`pm2 restart ${name}`)
+      // await shipit.remote(`pm2 restart ${name}`)
     }
 
   })

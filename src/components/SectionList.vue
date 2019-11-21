@@ -41,14 +41,14 @@
       label="85th"
       sortable
     />
-    <el-table-column
+    <!-- <el-table-column
       fixed="right"
       label="action"
     >
       <template slot-scope="scope">
         <el-button @click="handleClick(scope.row)" type="text" size="small">Detail</el-button>
       </template>
-    </el-table-column>
+    </el-table-column> -->
   </el-table>
   <div
     v-if="loaded"
