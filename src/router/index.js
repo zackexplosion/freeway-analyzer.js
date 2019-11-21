@@ -10,7 +10,10 @@ export default new Router({
     {
       path: '/',
       name: 'SectionList',
-      component: SectionList
+      component: SectionList,
+      meta: {
+        title: 'Dashboard'
+      }
     },
     {
       path: '/freeflow/:startGentryId',

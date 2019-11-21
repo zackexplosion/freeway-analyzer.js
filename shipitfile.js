@@ -13,6 +13,14 @@ module.exports = function (shipit) {
     }
   })
 
+  shipit.task('updateAssets', async () => {
+    await shipit.local(`npm run build`)
+    await shipit.copyToRemote(
+      './dist',
+      shipit.currentPath,
+    )
+  })
+
   shipit.on('deployed', async function () {
     // var shared_path = `${shipit.config.deployTo}/shared`
     try {
@@ -32,7 +40,7 @@ module.exports = function (shipit) {
   shipit.task('startApp', async () => {
     const current_path = `${shipit.config.deployTo}/current`
     try {
-      await shipit.remote(`cd ${current_path} && PORT=4000 npm run express:run`)
+      await shipit.remote(`cd ${current_path} && nvm use && PORT=4000 npm run express:run`)
       // await shipit.remote(`pm2 start ${current_path}/srv/index.js --name ${name}`)
     } catch (error) {
       // await shipit.remote(`pm2 restart ${name}`)
