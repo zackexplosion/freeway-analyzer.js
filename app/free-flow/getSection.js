@@ -1,7 +1,7 @@
 const moment = require('moment')
 const getGentry = require('../../lib/gentries')
 
-async function getSection(startGentryId, startDateTime, endDateTime) {
+async function getSection (startGentryId, startDateTime, endDateTime) {
   let query = {
     startGentryId: startGentryId,
     startDateTime: {
@@ -27,16 +27,16 @@ async function getSection(startGentryId, startDateTime, endDateTime) {
   var _85th = 0
   var validSpeeds = []
   rows.forEach(r => {
-    if ( typeof speeds[r.speed] === 'undefined') {
+    if (typeof speeds[r.speed] === 'undefined') {
       speeds[r.speed] = 0
     }
 
-    if(!endGentry && r.endGentryId != r.startGentryId) {
+    if (!endGentry && r.endGentryId != r.startGentryId) {
       endGentry = getGentry(r.endGentryId)
-      direction = r.endGentryId[r.endGentryId.length -1]
+      direction = r.endGentryId[r.endGentryId.length - 1]
     }
 
-    if(r.speed === 0) {
+    if (r.speed === 0) {
       invalidCount++
     } else {
       validSpeeds.push(r.speed)

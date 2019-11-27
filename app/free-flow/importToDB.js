@@ -3,14 +3,14 @@ const fs = require('fs')
 const handleRawRow = require('./handleRawRow')
 const parseCSV = require('./parseCSV')
 const moment = require('moment')
-function readFiles(baseDir, startDateTime, endDateTime) {
+function readFiles (baseDir, startDateTime, endDateTime) {
   const startHour = moment(startDateTime).hour()
   const endHour = moment(endDateTime).hour()
 
   let files = []
   console.log('import files from', startDateTime.format(), 'to', endDateTime.format())
   console.log(startHour, endHour)
-  for (let i = startHour;i <= endHour; i++){
+  for (let i = startHour; i <= endHour; i++) {
     let hour = i
     if (hour < 10) {
       hour = '0' + i
@@ -19,7 +19,6 @@ function readFiles(baseDir, startDateTime, endDateTime) {
     let YYYYMMDD = baseDir.split(path.sep).pop()
     let file_path = path.join(baseDir, hour.toString(), `TDCS_M06A_${YYYYMMDD}_${hour}0000.csv`)
 
-
     console.log('file_path', file_path)
     try {
       if (fs.existsSync(file_path)) {
@@ -27,13 +26,12 @@ function readFiles(baseDir, startDateTime, endDateTime) {
       } else {
         console.log(file_path, 'not exist')
       }
-    } catch(err) {
+    } catch (err) {
       console.error(err)
     }
   }
   return files
 }
-
 
 // module.exports = function(baseDir, db, startHour, endHour) {
 //   const Freeflow = db.models.Freeflow
@@ -73,7 +71,7 @@ function readFiles(baseDir, startDateTime, endDateTime) {
 //   })
 // }
 
-module.exports = function(filePpath) {
+module.exports = function (filePpath) {
   return new Promise(async (resolve, reject) => {
     console.log('Importing', filePpath)
     // let rows = []
@@ -89,14 +87,14 @@ module.exports = function(filePpath) {
         } else {
           success++
         }
-        process.stdout.clearLine()  // clear current text
+        process.stdout.clearLine() // clear current text
         process.stdout.cursorTo(0)
         process.stdout.write(msg)
         // console.log(d)
       })
     })
     // await db.models.Freeflow.insertMany(rows)
-    process.stdout.clearLine()  // clear current text
+    process.stdout.clearLine() // clear current text
     process.stdout.cursorTo(0)
     process.stdout.write(`${rowsCount} line readed and inserted`)
     console.log(' ')

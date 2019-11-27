@@ -2,7 +2,7 @@ const getVehicleType = require('../../lib/vehicleTypes')
 const getGentry = require('../../lib/gentries')
 const ObjectId = require('mongoose').Types.ObjectId
 const moment = require('moment')
-function calculateSpeed(d1, d2, length) {
+function calculateSpeed (d1, d2, length) {
   d1 = moment(d1)
   d2 = moment(d2)
   // let duration = (d2 - d1) / 1000
@@ -17,10 +17,10 @@ function calculateSpeed(d1, d2, length) {
   //   console.log(d2.format())
   //   process.exit()
   // }
-  // return speed
+  return speed
 }
 
-function handleRow(index, row) {
+function handleRow (index, row) {
   let i = 0
   let details = row['tripDetails']
   // let vehicleId =
@@ -62,8 +62,7 @@ function handleRow(index, row) {
       // // console.log(startGentry)
       if (typeof startGentry === 'object' &&
           typeof endGentry === 'object' &&
-          startGentryId != endGentryId)
-      {
+          startGentryId != endGentryId) {
         tripLength = Math.abs(
           getGentry(endGentryId).locationMile -
           getGentry(startGentryId).locationMile
@@ -97,7 +96,7 @@ function handleRow(index, row) {
     } catch (error) {
       console.log(error)
     }
-  } while(i < details.length - 1)
+  } while (i < details.length - 1)
   return result
 }
 

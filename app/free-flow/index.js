@@ -22,21 +22,20 @@ const importToDB = require('./importToDB')
 const printData = require('./printData')
 const getSection = require('./getSection')
 
-
 var db
 
-function buildRawFilePath(baseDir, targetDateTime) {
+function buildRawFilePath (baseDir, targetDateTime) {
   let hour = moment(targetDateTime).format('HH')
   let YYYYMMDD = moment(targetDateTime).format('YYYYMMDD')
-  let file_path = path.join(baseDir, hour, `TDCS_M06A_${YYYYMMDD}_${hour}0000.csv`)
+  let filePath = path.join(baseDir, hour, `TDCS_M06A_${YYYYMMDD}_${hour}0000.csv`)
 
-  if (fs.existsSync(file_path)) {
-    return file_path
+  if (fs.existsSync(filePath)) {
+    return filePath
   } else {
     return false
   }
 }
-async function main() {
+async function main () {
   var hrstart = process.hrtime()
   try {
     // set db as global variable
@@ -48,7 +47,8 @@ async function main() {
 
     // TODO
     // Make it multithread?
-    while (missingDateTime = missingRawDataByRange.shift()) {
+    let missingDateTime
+    while ((missingDateTime = missingRawDataByRange.shift())) {
       // if the raw data are missing, check the source file
       // if source file not exist, download it
       let importBaseDir = await checkSourceFile(missingDateTime)
@@ -77,7 +77,7 @@ async function main() {
   process.exit()
 }
 
-async function getMissingRawDataByRange() {
+async function getMissingRawDataByRange () {
   console.log('Checking if raw data imported')
   let hoursBetweenQuery = moment.duration(endDateTime - startDateTime).asHours()
   let currentIndexDateTime = moment(startDateTime)

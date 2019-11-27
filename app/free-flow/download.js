@@ -4,7 +4,7 @@ const path = require('path')
 const fs = require('fs')
 // decompress files from tar.gz archive
 
-module.exports = function(url) {
+module.exports = function (url) {
   return new Promise((resolve, reject) => {
     // create a new progress bar instance and use shades_classic theme
     const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic)
@@ -19,7 +19,7 @@ module.exports = function(url) {
       onDone: (info) => {
         // stop the progress bar
         bar1.stop()
-        if(info.size < 10000) {
+        if (info.size < 10000) {
           return reject('file not found')
         }
         let newPath = path.join(

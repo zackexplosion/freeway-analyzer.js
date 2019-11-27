@@ -1,5 +1,7 @@
 # Freeway-Analyzer.js
 
+嗯...目前文件不是很完善
+
 計算由高公局提供的自由車流，目前使用的資料為M06A
 
 <http://tisvcloud.freeway.gov.tw>
@@ -30,7 +32,7 @@
 ![](https://i.imgur.com/e0y8acG.png)
 
 ## 本地 Node.js
-如果你使用本機的Node.js開發，請安裝`node.js 13.`
+如果你使用本機的Node.js開發，請安裝`node.js 13.1`
 
 `node.js`可利用 `nvm` 安裝，請參考 https://noob.tw/nvm/
 

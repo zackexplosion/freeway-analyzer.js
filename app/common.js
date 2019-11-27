@@ -1,4 +1,4 @@
-if( process.versions.node !== '13.1.0'){
+if (process.versions.node !== '13.1.0') {
   throw `Wrong Node.js version \nCurrent: ${process.versions.node}, Required: 13.1.0`
 }
 
@@ -8,7 +8,6 @@ mongoose.set('useCreateIndex', true)
 const DB_HOST = process.env.DB_HOST || '127.0.0.1'
 const DB_PORT = process.env.DB_PORT || 27017
 
-
 // const M06A = mongoose.model('M06A', {
 //   vehicleType: { type: Number, index: true},
 //   enterTime: { type: Date, index: true},
@@ -17,7 +16,6 @@ const DB_PORT = process.env.DB_PORT || 27017
 //   exitGentry: { type: String, index: true},
 //   tripLength: { type: Number, index: true},
 //   tripDetails: [String]
-
 
 // })
 
