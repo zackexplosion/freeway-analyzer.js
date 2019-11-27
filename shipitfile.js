@@ -14,7 +14,7 @@ module.exports = function (shipit) {
   })
 
   shipit.task('updateAssets', async () => {
-    // await shipit.local(`npm run build`)
+    await shipit.local(`npm run build`)
     // console.log(shipit.config.deployTo)
     await shipit.copyToRemote(
       './dist',
