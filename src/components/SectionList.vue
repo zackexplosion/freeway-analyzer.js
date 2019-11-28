@@ -1,12 +1,9 @@
 <template>
 <div>
-  <!-- <div class="input-group" slot="header">
-    <input v-model="search" widht="" type="" class="ob-search-input ob-shadow search-input mr-3" placeholder="YEE">
-  </div> -->
   <el-table
     highlight-current-row
     :data="sectionsFiltered"
-    height="200"
+    height="400"
     style="width: 100%"
     @current-change="handleCurrentChange"
   >
@@ -41,14 +38,6 @@
       label="85th"
       sortable
     />
-    <!-- <el-table-column
-      fixed="right"
-      label="action"
-    >
-      <template slot-scope="scope">
-        <el-button @click="handleClick(scope.row)" type="text" size="small">Detail</el-button>
-      </template>
-    </el-table-column> -->
   </el-table>
   <div
     v-if="loaded"
@@ -100,12 +89,8 @@ export default {
       // TODO
       // implement filter function
       return this.sections.filter(data => {
-        // console.log(data.startGentryId)
         if (!this.search) return true
-
         return true
-        // if(data)
-        // data.name.toLowerCase().includes(this.search.toLowerCase())
       })
     }
   },
@@ -120,7 +105,9 @@ export default {
       })
     },
     handleCurrentChange (row) {
-      this.loaded = false
+      // this.loaded = false
+      this.gtagTracking(row)
+
       request('/sections/' + row.startGentryId).then(res => {
         this.data = res
         // this.chartdata[0].data = sections.speeds.map()
@@ -143,6 +130,16 @@ export default {
       let e = row.endGentry
       return `${s.sectionStart} ${s.locationMileRaw} ~ ${e.sectionEnd}  ${e.locationMileRaw}`
     },
+    gtagTracking (row) {
+      // console.log(row)
+      // console.log(this.sectionRange(row))
+      if (window.gtag) {
+        window.gtag('event', 'click', {
+          'event_category': 'section',
+          'event_label': this.sectionRange(row)
+        })
+      }
+    },
     getMiles (row, col) {
       let r = Math.abs(row.endGentry.locationMile - row.startGentry.locationMile).toFixed(2)
 
@@ -154,6 +151,9 @@ export default {
 </script>
 
 <style scoped>
+.chart {
+  min-height: 40vh;
+}
 .chart article {
   padding:2em;
 }

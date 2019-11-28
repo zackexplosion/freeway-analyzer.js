@@ -10,17 +10,21 @@ export default {
     },
     options: {
       type: Object,
-      default: null
+      default: () => {
+        return {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      }
     }
   },
   mounted () {
-    let options = {
-      responsive: true,
-      maintainAspectRatio: false
+    this.renderChart(this.chartData, this.options)
+  },
+  watch: {
+    chartData: function (newVal, oldVal) {
+      this.renderChart(newVal, this.options)
     }
-    // console.log('mountted')
-    // console.log(this.chartData)
-    this.renderChart(this.chartData, options)
   }
 }
 </script>
