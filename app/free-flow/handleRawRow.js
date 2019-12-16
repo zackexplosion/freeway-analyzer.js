@@ -62,13 +62,18 @@ function handleRow (index, row) {
       // // console.log(startGentry)
       if (typeof startGentry === 'object' &&
           typeof endGentry === 'object' &&
-          startGentryId != endGentryId) {
-        tripLength = Math.abs(
-          getGentry(endGentryId).locationMile -
-          getGentry(startGentryId).locationMile
-        ).toFixed(1)
+          startGentryId !== endGentryId) {
+        if (startGentry.roadName !== endGentry.roadName) {
+          tripLength = NaN
+          // speed = 0
+        } else {
+          tripLength = Math.abs(
+            getGentry(endGentryId).locationMile -
+              getGentry(startGentryId).locationMile
+          ).toFixed(1)
 
-        tripLength = parseFloat(tripLength)
+          tripLength = parseFloat(tripLength)
+        }
         if (!isNaN(tripLength)) {
           speed = calculateSpeed(startDateTime, endDateTime, tripLength)
         }
@@ -76,7 +81,7 @@ function handleRow (index, row) {
 
       // console.log('tripLength', tripLength)
       // console.log('speed', speed)
-      let row_to_insert = {
+      let rowToInsert = {
         vehicleId,
         key,
         tripStartDateTime,
@@ -91,7 +96,7 @@ function handleRow (index, row) {
         speed
       }
 
-      result.push(row_to_insert)
+      result.push(rowToInsert)
       i++
     } catch (error) {
       console.log(error)

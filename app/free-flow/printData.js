@@ -16,7 +16,7 @@ function printData (sectionData) {
       _85th
     } = sectionData
 
-    if (speeds.length == 0) {
+    if (speeds.length === 0) {
       console.log('查無資料')
       process.exit()
     }

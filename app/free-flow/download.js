@@ -20,7 +20,7 @@ module.exports = function (url) {
         // stop the progress bar
         bar1.stop()
         if (info.size < 10000) {
-          return reject('file not found')
+          return reject(new Error('file not found'))
         }
         let newPath = path.join(
           path.dirname(info.path),

@@ -6,8 +6,8 @@ const adapter = new FileSync('db.json')
 const lowdb = low(adapter)
 export default (app, http) => {
   // Set some defaults (required if your JSON file is empty)
-  lowdb.defaults({ freeflows: [], counter: 0 })
-    .write()
+  // lowdb.defaults({ freeflows: [], counter: 0 })
+  //   .write()
 
   app.use(cors())
 
@@ -34,9 +34,15 @@ export default (app, http) => {
     res.json(list)
   })
 
-  app.get('/sections/:id', function (req, res) {
+  app.get('/sections/:startGentryId?', function (req, res) {
     let query = {
-      startGentryId: req.params.id
+      startGentryId: req.params.id,
+      endGentryId: req.params.id,
+      starTime: req.params.id
+    }
+
+    let query = {
+      key: `${}`
     }
     let row = lowdb.get('freeflows').find(query).value()
     res.json(row)

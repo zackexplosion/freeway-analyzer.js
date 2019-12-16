@@ -9,7 +9,7 @@ const table = new Table({
   head: ['Time', 'Name', 'Mile', 'Section', 'Speed'],
   colWidths: [22, 25, 15, 50, 30]
 })
-function calculateSpeed(d1, d2, length) {
+function calculateSpeed (d1, d2, length) {
   // let duration = (d2 - d1) / 1000
   let duration = moment.duration(d2 - d1)
   let speed = (length / duration.asHours())
@@ -17,7 +17,7 @@ function calculateSpeed(d1, d2, length) {
   // console.log('d2', d2)
   // console.log('length', length)
   // console.log('speed', speed)
-  return  {
+  return {
     // duration: humanizeDuration(duration.asSeconds()),
     duration: humanizeDuration(duration.asSeconds() * 1000),
     speed: Math.round(Math.abs(speed))
@@ -25,6 +25,10 @@ function calculateSpeed(d1, d2, length) {
 }
 
 require('./common')(async (err, Models) => {
+  if (err) {
+    console.error(err)
+    process.exit()
+  }
   let row
   try {
     row = await Models.M06A.findOne(ObjectId(process.argv[2]))
@@ -58,9 +62,9 @@ require('./common')(async (err, Models) => {
     //   ])
     // }
     // else {
-    if (i != 0 && i != row['tripDetails'].length-1) {
+    if (i != 0 && i != row['tripDetails'].length - 1) {
       // console.log(row['tripDetails'][i+1])
-      let [nextDateTime, nextGentry_id] = row['tripDetails'][i+1].split('+')
+      let [nextDateTime, nextGentry_id] = row['tripDetails'][i + 1].split('+')
       let nextGentry = gentries(nextGentry_id)
       // console.log('nextDateTime', nextDateTime)
       let result = calculateSpeed(new Date(startDateTime), new Date(nextDateTime), nextGentry.locationMile - startGentry.locationMile)
@@ -83,13 +87,13 @@ require('./common')(async (err, Models) => {
   // let { speed, duration } = calculateSpeed(row['tripDetails'][0], row['tripDetails'][row['tripDetails'].length - 1], row['tripLength'])
   console.log('車種:', vTypes(row['vehicleType']))
   console.log('總里程:', row['tripLength'], 'KM')
-  let duration = moment.duration(new Date(accessTimes[accessTimes.length-1]) - new Date (accessTimes[0]))
+  let duration = moment.duration(new Date(accessTimes[accessTimes.length - 1]) - new Date(accessTimes[0]))
   duration = humanizeDuration(duration.asSeconds() * 1000)
   let direction = {
     'N': '北上',
     'S': '南下'
   }
-  console.log('總時間:', duration )
+  console.log('總時間:', duration)
   // console.log('方向:', direction[row])
   // console.log(':', duration)
   // console.log('平均速度:', speeds.reduce((a, b) => a+b ) + ' km/h')
@@ -97,4 +101,3 @@ require('./common')(async (err, Models) => {
   console.log(table.toString())
   process.exit()
 })
-
