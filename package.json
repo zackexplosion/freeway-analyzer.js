@@ -68,7 +68,7 @@
     "moment": "^2.24.0",
     "mongoose": "^5.7.10",
     "nightwatch": "^0.9.12",
-    "node-notifier": "^5.1.2",
+    "node-notifier": "^8.0.1",
     "nodemon": "^1.19.4",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "ora": "^1.2.0",
